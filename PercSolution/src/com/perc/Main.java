@@ -6,17 +6,23 @@ public class Main {
 
   public static void main(String[] args) {
     try {
-      File file = new File("../data/example.in");
+      String path = new File("data/example.in").getAbsolutePath();
+      File file = new File(path);
       Scanner scanner = new Scanner(file);
-      while (scanner.hasNextLine()) {
-        String data = scanner.nextLine();
-        System.out.println(data);
-        break;
-      }
-    } catch (Exception e) {
+      String projectData = scanner.nextLine();
+      String[] array = projectData.split(" ");
+      int numVideo = Integer.parseInt(array[0]);
+      int numEndPoints = Integer.parseInt(array[1]);
+      int numRequests = Integer.parseInt(array[2]);
+      int numCacheServers = Integer.parseInt(array[3]);
+      int sizeCacheServer = Integer.parseInt(array[4]);
       
+      String videos = scanner.nextLine();
+      // Add video data here
+    } catch (Exception e) {
+      System.out.println(e);
     } finally {
-    
+      
     }
   }
 }
