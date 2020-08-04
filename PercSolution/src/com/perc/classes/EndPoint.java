@@ -1,5 +1,6 @@
 package com.perc.classes;
 
+import java.util.*;
 public class EndPoint {
   // list of videos
   // ID
@@ -12,4 +13,7 @@ public class EndPoint {
       video Id : num_of_requests
     }
   */
+
+  public List<Video> videos;
+  
 }
