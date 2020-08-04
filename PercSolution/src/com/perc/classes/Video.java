@@ -1,24 +1,15 @@
 package com.perc.classes;
 
+import java.util.HashSet;
+
 public class Video {
 
-  private String videoId;
-  private int videoSize;
+  int videoId;
+  int videoSize;
 
-  public int getVideoSize() {
-    return videoSize;
-  }
-
-  public void setVideoSize(int videoSize) {
-    this.videoSize = videoSize;
-  }
-
-  public String getVideoId() {
-    return videoId;
-  }
-
-  public void setVideoId(String videoId) {
+  public Video(int videoId, int videoSize) {
     this.videoId = videoId;
+    this.videoSize = videoSize;
   }
 
 }
