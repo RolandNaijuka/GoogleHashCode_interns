@@ -39,5 +39,9 @@ public class EndPoint {
     }
     return this.cacheLatency.get(cacheServerId);
   }
+
+  public int getCacheLatencySize() {
+    return this.cacheLatency.size();
+  }
   
 }

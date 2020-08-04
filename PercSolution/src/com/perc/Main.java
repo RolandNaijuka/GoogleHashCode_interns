@@ -62,4 +62,27 @@ public class Main {
       System.out.println(e);
     }
   }
+
+// Boiler plate for the algorithm
+  public static int minimizeLatency(EndPoint endPoint, Video video, CacheServer cacheServer, int[] memo) {
+    if (endPoint.getCacheLatencySize() == 0) {
+      return endPoint.dataCenterLatency;
+    }
+    if (video.videoSize > cacheServer.maxStorage || cacheServer.maxStorage - video.videoSize < 0) {
+      return endPoint.dataCenterLatency;
+    }
+    cacheServer.addVideo(video.videoId);
+    cacheServer.maxStorage -= video.videoSize;
+//    Not Data center
+    if (memo[video.videoId] == -1){
+      memo[video.videoId]
+              = Math.min(
+              endPoint.dataCenterLatency,
+              Math.min(
+                      endPoint.getCacheLatency(cacheServer.cacheServerId),
+                      minimizeLatency(endPoint, video, cacheServer, memo)
+              ));
+    }
+    return memo[video.videoId];
+  }
 }
