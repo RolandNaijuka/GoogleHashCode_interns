@@ -1,6 +1,7 @@
 package com.perc;
 
 import com.perc.classes.CacheServer;
+import com.perc.classes.DataCenter;
 import com.perc.classes.EndPoint;
 import com.perc.classes.Video;
 
@@ -46,15 +47,21 @@ public class Main {
         endPoints.add(endPoint);
       }
 //      Add all the requests
-      while (numRequests > 0)  {
+      int tempNumRequests = numRequests;
+      while (tempNumRequests > 0)  {
       int videoId = scanner.nextInt();
       int endPointId = scanner.nextInt();
       int num_of_requests = scanner.nextInt();
       endPoints.get(endPointId).addVideoRequest(videoId, num_of_requests);
-        numRequests --;
+        tempNumRequests --;
       }
+      DataCenter dataCenter = new DataCenter();
+      minimizeLatency(endPoints, cacheServers, videos, dataCenter);
 
-
+      for (CacheServer server: cacheServers) {
+//        Print the list of cache server
+        System.out.println();
+      }
 
 
       scanner.close();
@@ -64,25 +71,40 @@ public class Main {
   }
 
 // Boiler plate for the algorithm
-  public static int minimizeLatency(EndPoint endPoint, Video video, CacheServer cacheServer, int[] memo) {
-    if (endPoint.getCacheLatencySize() == 0) {
-      return endPoint.dataCenterLatency;
+  public static void minimizeLatency(ArrayList<EndPoint> endPoints, ArrayList<CacheServer>  cacheServers, ArrayList<Video> videos, DataCenter dataCenter) {
+    for (EndPoint endPoint: endPoints) {
+      HashMap<Integer, Integer> videoRequestsUnsorted = endPoint.videoRequests;
+      HashMap<Integer, Integer> cacheLatenciesUnsorted = endPoint.cacheLatency;
+
+//      Sorted in descending order of video requests
+      HashMap<Integer, Integer> videoRequests = new HashMap<>();
+      videoRequestsUnsorted.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+              .forEachOrdered(x -> videoRequests.put(x.getKey(), x.getValue()));
+//      Sorted in ascending order of latencies
+      HashMap<Integer, Integer> cacheLatencies = new HashMap<>();
+      cacheLatenciesUnsorted.entrySet()
+              .stream()
+              .sorted(Map.Entry.comparingByValue())
+              .forEachOrdered(x -> cacheLatencies.put(x.getKey(), x.getValue()));
+
+
+      for(int videoId: videoRequests.keySet()) {
+        int num_of_video_requests = videoRequests.get(videoId);
+        int videoSize = videos.get(videoId).videoSize;
+        boolean videoAdded = false;
+        for (int cacheId: cacheLatencies.keySet()) {
+          CacheServer cacheServer = cacheServers.get(cacheId);
+          if (videoSize <= cacheServer.maxStorage && !cacheServer.containsVideo(videoId)) {
+            cacheServer.maxStorage -= videoSize;
+            cacheServer.addVideo(videoId);
+            videoAdded = true;
+            break;
+          }
+        }
+        if (!videoAdded) {
+          dataCenter.addVideo(videoId);
+        }
+      }
     }
-    if (video.videoSize > cacheServer.maxStorage || cacheServer.maxStorage - video.videoSize < 0) {
-      return endPoint.dataCenterLatency;
-    }
-    cacheServer.addVideo(video.videoId);
-    cacheServer.maxStorage -= video.videoSize;
-//    Not Data center
-    if (memo[video.videoId] == -1){
-      memo[video.videoId]
-              = Math.min(
-              endPoint.dataCenterLatency,
-              Math.min(
-                      endPoint.getCacheLatency(cacheServer.cacheServerId),
-                      minimizeLatency(endPoint, video, cacheServer, memo)
-              ));
-    }
-    return memo[video.videoId];
   }
 }

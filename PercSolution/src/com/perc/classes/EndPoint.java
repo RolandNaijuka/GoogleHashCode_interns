@@ -6,8 +6,8 @@ public class EndPoint {
 
   public int endPointId;
   public int dataCenterLatency;
-  private HashMap<Integer, Integer> cacheLatency;
-  private HashMap<Integer, Integer> videoRequests;
+  public HashMap<Integer, Integer> cacheLatency;
+  public HashMap<Integer, Integer> videoRequests;
 
   public EndPoint(int endPointId, int dataCenterLatency) {
     this.endPointId = endPointId;
