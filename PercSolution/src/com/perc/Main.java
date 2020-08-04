@@ -7,13 +7,16 @@ import com.perc.classes.Video;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 public class Main {
 
   public static void main(String[] args) {
     try {
 //      use the pathname as "data/example.in" while running on terminal
 //      use the pathname as "src/com/perc/data/example.in" while running in IntelliJ IDEA or eclipse
-      String path = new File("src/com/perc/data/example.in").getAbsolutePath();
+      String path = new File("src/com/perc/data/vloggers_of_the_world.in").getAbsolutePath();
       File file = new File(path);
       Scanner scanner = new Scanner(file);
       int numVideo = scanner.nextInt();
@@ -49,22 +52,36 @@ public class Main {
 //      Add all the requests
       int tempNumRequests = numRequests;
       while (tempNumRequests > 0)  {
-      int videoId = scanner.nextInt();
-      int endPointId = scanner.nextInt();
-      int num_of_requests = scanner.nextInt();
-      endPoints.get(endPointId).addVideoRequest(videoId, num_of_requests);
+        int videoId = scanner.nextInt();
+        int endPointId = scanner.nextInt();
+        int num_of_requests = scanner.nextInt();
+        endPoints.get(endPointId).addVideoRequest(videoId, num_of_requests);
         tempNumRequests --;
       }
+
+      scanner.close();
+
+
       DataCenter dataCenter = new DataCenter();
       minimizeLatency(endPoints, cacheServers, videos, dataCenter);
 
-      for (CacheServer server: cacheServers) {
-//        Print the list of cache server
-        System.out.println();
+      List<CacheServer> filteredCacheServers = cacheServers
+              .stream()
+              .filter(cacheServer -> !cacheServer.videos.isEmpty())
+              .collect(Collectors.toList());
+      String pathOut = new File("src/com/perc/data/vloggers_of_the_world.out").getAbsolutePath();
+      File output = new File(pathOut);
+      output.createNewFile();
+
+      FileWriter fileWriter = new FileWriter(output);
+      fileWriter.write(filteredCacheServers.size()+"\n");
+
+      for (CacheServer cacheServer: filteredCacheServers) {
+        fileWriter.write(cacheServer.toString()+"\n");
       }
 
+      fileWriter.close();
 
-      scanner.close();
     } catch (Exception e) {
       System.out.println(e);
     }

@@ -27,4 +27,17 @@ public class CacheServer {
     public boolean containsVideo(int videoId) {
         return this.videos.contains(videoId);
     }
+
+    @Override
+    public String toString() {
+        String str = this.cacheServerId+"";
+        StringBuilder sbr = new StringBuilder(str);
+        for (int videoId: this.videos) {
+            sbr.append(" ");
+            sbr.append(videoId);
+        }
+        return sbr.toString();
+    }
+
+
 }
