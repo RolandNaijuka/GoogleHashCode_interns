@@ -1,13 +1,24 @@
 package com.perc.classes;
 
 public class Video {
-  // ID
-  // Sizes
-  //
-  public int id;
-  public int size;
-  Video(int id, int size) {
-    this.id = id;
-    this.size = size;
-  } 
+
+  private String videoId;
+  private int videoSize;
+
+  public int getVideoSize() {
+    return videoSize;
+  }
+
+  public void setVideoSize(int videoSize) {
+    this.videoSize = videoSize;
+  }
+
+  public String getVideoId() {
+    return videoId;
+  }
+
+  public void setVideoId(String videoId) {
+    this.videoId = videoId;
+  }
+
 }
