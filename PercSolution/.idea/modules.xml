@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PercSolution.iml" filepath="$PROJECT_DIR$/PercSolution.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PercSolution.main.iml" filepath="$PROJECT_DIR$/.idea/modules/PercSolution.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PercSolution.test.iml" filepath="$PROJECT_DIR$/.idea/modules/PercSolution.test.iml" />
     </modules>
   </component>
 </project>
