@@ -5,6 +5,10 @@
 # Ignore the output files
 **/*.out
 
+# Ignore gradle output
+**/.gradle/
+**/build/**
+
 # Log file
 *.log
 
