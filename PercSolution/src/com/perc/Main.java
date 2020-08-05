@@ -14,84 +14,96 @@ public class Main {
   private static final String SEPARATOR = "#";
 
   public static void main(String[] args) {
-    try {
-//      use the pathname as "data/example.in" while running on terminal
-//      use the pathname as "src/com/perc/data/example.in" while running in IntelliJ IDEA or eclipse
-      String path = new File("src/com/perc/data/example.in").getAbsolutePath();
-      File file = new File(path);
-      Scanner scanner = new Scanner(file);
-      int numVideo = scanner.nextInt();
-      int numEndPoints = scanner.nextInt();
-      int numRequests = scanner.nextInt();
-      int numCacheServers = scanner.nextInt();
-      int sizeCacheServer = scanner.nextInt();
+//    use the pathname as "data/in" while running on terminal
+//   use the pathname as "src/com/perc/data/in" while running in IntelliJ IDEA or eclipse
+    String folderPath = new File("src/com/perc/data/in").getAbsolutePath();
+    File folder = new File(folderPath);
+    File[] listOfFiles = folder.listFiles();
+
+    for (File file : listOfFiles) {
+      if (file.isFile()) {
+        try {
+          Scanner scanner = new Scanner(file);
+          int numVideo = scanner.nextInt();
+          int numEndPoints = scanner.nextInt();
+          int numRequests = scanner.nextInt();
+          int numCacheServers = scanner.nextInt();
+          int sizeCacheServer = scanner.nextInt();
 //      Create all cache servers
-      ArrayList<CacheServer> cacheServers = new ArrayList<>();
-      for (int cacheServerId = 0; cacheServerId < numCacheServers; cacheServerId++) {
-        cacheServers.add(new CacheServer(cacheServerId, sizeCacheServer));
-      }
+          ArrayList<CacheServer> cacheServers = new ArrayList<>();
+          for (int cacheServerId = 0; cacheServerId < numCacheServers; cacheServerId++) {
+            cacheServers.add(new CacheServer(cacheServerId, sizeCacheServer));
+          }
 //      Add all videos
-      ArrayList<Video> videos = new ArrayList<>();
-      for (int videoId = 0; videoId < numVideo; videoId++) {
-        int videoSize = scanner.nextInt();
-        videos.add(new Video(videoId, videoSize));
-      }
+          ArrayList<Video> videos = new ArrayList<>();
+          for (int videoId = 0; videoId < numVideo; videoId++) {
+            int videoSize = scanner.nextInt();
+            videos.add(new Video(videoId, videoSize));
+          }
 //      Add all endpoints and their connected cache servers
-      ArrayList<EndPoint> endPoints = new ArrayList<>();
-      for (int endPointId = 0; endPointId < numEndPoints; endPointId++) {
-        int dataCenterLatency = scanner.nextInt();
-        int numOfConnectedCaches = scanner.nextInt();
-        EndPoint endPoint = new EndPoint(endPointId, dataCenterLatency);
-        while (numOfConnectedCaches > 0) {
-          int cacheServerId = scanner.nextInt();
-          int latency = scanner.nextInt();
-          endPoint.addCacheLatency(cacheServerId, latency);
-          numOfConnectedCaches--;
-        }
-        endPoints.add(endPoint);
-      }
+          ArrayList<EndPoint> endPoints = new ArrayList<>();
+          for (int endPointId = 0; endPointId < numEndPoints; endPointId++) {
+            int dataCenterLatency = scanner.nextInt();
+            int numOfConnectedCaches = scanner.nextInt();
+            EndPoint endPoint = new EndPoint(endPointId, dataCenterLatency);
+            while (numOfConnectedCaches > 0) {
+              int cacheServerId = scanner.nextInt();
+              int latency = scanner.nextInt();
+              endPoint.addCacheLatency(cacheServerId, latency);
+              numOfConnectedCaches--;
+            }
+            endPoints.add(endPoint);
+          }
 //      Add all the requests
-      HashMap<String, Integer> videoRequests = new HashMap<>();
-      int tempNumRequests = numRequests;
-      while (tempNumRequests > 0) {
-        int videoId = scanner.nextInt();
-        int endPointId = scanner.nextInt();
-        int num_of_requests = scanner.nextInt();
+          HashMap<String, Integer> videoRequests = new HashMap<>();
+          int tempNumRequests = numRequests;
+          while (tempNumRequests > 0) {
+            int videoId = scanner.nextInt();
+            int endPointId = scanner.nextInt();
+            int num_of_requests = scanner.nextInt();
 
 //        Add video requests to a map which is gonna be sorted later
-        String videoId_endPointId = String.format("%d%s%d", videoId, SEPARATOR, endPointId);
-        videoRequests.put(videoId_endPointId, num_of_requests);
+            String videoId_endPointId = String.format("%d%s%d", videoId, SEPARATOR, endPointId);
+            videoRequests.put(videoId_endPointId, num_of_requests);
 
-        endPoints.get(endPointId).addVideoRequest(videoId, num_of_requests);
-        tempNumRequests--;
-      }
+            endPoints.get(endPointId).addVideoRequest(videoId, num_of_requests);
+            tempNumRequests--;
+          }
 
-      scanner.close();
+          scanner.close();
 
 
-      DataCenter dataCenter = new DataCenter();
+          DataCenter dataCenter = new DataCenter();
 //      minimizeLatency(endPoints, cacheServers, videos, dataCenter);
-      minimizeLatencies(videoRequests, endPoints, cacheServers, videos, dataCenter);
+          minimizeLatencies(videoRequests, endPoints, cacheServers, videos, dataCenter);
 
-      List<CacheServer> filteredCacheServers = cacheServers
-              .stream()
-              .filter(cacheServer -> !cacheServer.videos.isEmpty())
-              .collect(Collectors.toList());
-      String pathOut = new File("src/com/perc/data/vloggers_of_the_world.out").getAbsolutePath();
-      File output = new File(pathOut);
+          List<CacheServer> filteredCacheServers = cacheServers
+                  .stream()
+                  .filter(cacheServer -> !cacheServer.videos.isEmpty())
+                  .collect(Collectors.toList());
+//          Get the input file name without the .in extension
+          String fileName = file.getName().split("\\.")[0];
 
-      FileWriter fileWriter = new FileWriter(output);
-      fileWriter.write(filteredCacheServers.size() + "\n");
+          String pathOut = new File("src/com/perc/data/out").getAbsolutePath();
+          pathOut += File.separator + fileName + ".out";
+          File output = new File(pathOut);
 
-      for (CacheServer cacheServer : filteredCacheServers) {
-        fileWriter.write(cacheServer.toString() + "\n");
+          FileWriter fileWriter = new FileWriter(output);
+          fileWriter.write(filteredCacheServers.size() + "\n");
+
+          for (CacheServer cacheServer : filteredCacheServers) {
+            fileWriter.write(cacheServer.toString() + "\n");
+          }
+
+          fileWriter.close();
+
+        } catch (Exception e) {
+          System.err.println(e.toString());
+        }
       }
-
-      fileWriter.close();
-
-    } catch (Exception e) {
-      System.err.println(e.toString());
     }
+
+
   }
 
   private static HashMap<String, Integer> sortMapDesc(@NotNull HashMap<String, Integer> videoRequestsUnSorted) {
