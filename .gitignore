@@ -9,6 +9,9 @@
 **/.gradle/
 **/build/**
 
+# Ignore mac files
+**/.DS_Store
+
 # Log file
 *.log
 
