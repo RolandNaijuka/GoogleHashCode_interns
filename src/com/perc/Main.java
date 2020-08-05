@@ -84,6 +84,10 @@ public class Main {
           String fileName = file.getName().split("\\.")[0];
 
           String pathOut = new File("src/com/perc/data/out").getAbsolutePath();
+//          Create the folder  if it does not exist
+          File outputFolder = new File(pathOut);
+          //noinspection ResultOfMethodCallIgnored
+          outputFolder.mkdir();
           pathOut += File.separator + fileName + ".out";
           File output = new File(pathOut);
 
