@@ -26,7 +26,6 @@
 # Resolve links: $0 may be a link
 PRG="$0"
 # Need this for relative symlinks.
-# shellcheck disable=SC2006
 while [ -h "$PRG" ] ; do
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
@@ -37,18 +36,12 @@ while [ -h "$PRG" ] ; do
         PRG=`dirname "$PRG"`"/$link"
     fi
 done
-# shellcheck disable=SC2006
 SAVED="`pwd`"
-# shellcheck disable=SC2164
-# shellcheck disable=SC2006
 cd "`dirname \"$PRG\"`/" >/dev/null
-# shellcheck disable=SC2006
 APP_HOME="`pwd -P`"
-# shellcheck disable=SC2164
 cd "$SAVED" >/dev/null
 
 APP_NAME="Gradle"
-# shellcheck disable=SC2006
 APP_BASE_NAME=`basename "$0"`
 
 # Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
@@ -73,7 +66,6 @@ cygwin=false
 msys=false
 darwin=false
 nonstop=false
-# shellcheck disable=SC2006
 case "`uname`" in
   CYGWIN* )
     cygwin=true
@@ -108,7 +100,6 @@ location of your Java installation."
     fi
 else
     JAVACMD="java"
-    # shellcheck disable=SC2230
     which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
 
 Please set the JAVA_HOME variable in your environment to match the
@@ -116,18 +107,13 @@ location of your Java installation."
 fi
 
 # Increase the maximum file descriptors if we can.
-# shellcheck disable=SC2166
 if [ "$cygwin" = "false" -a "$darwin" = "false" -a "$nonstop" = "false" ] ; then
-    # shellcheck disable=SC2039
-    MAX_FD_LIMIT=$(ulimit -H -n)
-    # shellcheck disable=SC2181
+    MAX_FD_LIMIT=`ulimit -H -n`
     if [ $? -eq 0 ] ; then
         if [ "$MAX_FD" = "maximum" -o "$MAX_FD" = "max" ] ; then
             MAX_FD="$MAX_FD_LIMIT"
         fi
-        # shellcheck disable=SC2039
         ulimit -n $MAX_FD
-        # shellcheck disable=SC2181
         if [ $? -ne 0 ] ; then
             warn "Could not set maximum file descriptor limit: $MAX_FD"
         fi
@@ -142,18 +128,13 @@ if $darwin; then
 fi
 
 # For Cygwin or MSYS, switch paths to Windows format before running java
-# shellcheck disable=SC2166
 if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
-    # shellcheck disable=SC2006
     APP_HOME=`cygpath --path --mixed "$APP_HOME"`
-    # shellcheck disable=SC2006
     CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
     
-    # shellcheck disable=SC2006
     JAVACMD=`cygpath --unix "$JAVACMD"`
 
     # We build the pattern for arguments to be converted via cygpath
-    # shellcheck disable=SC2006
     ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`
     SEP=""
     for dir in $ROOTDIRSRAW ; do
@@ -168,30 +149,16 @@ if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     # Now convert the arguments - kludge to limit ourselves to /bin/sh
     i=0
     for arg in "$@" ; do
-        # shellcheck disable=SC2006
-        # shellcheck disable=SC2196
         CHECK=`echo "$arg"|egrep -c "$OURCYGPATTERN" -`
-        # shellcheck disable=SC2006
-        # shellcheck disable=SC2196
         CHECK2=`echo "$arg"|egrep -c "^-"`                                 ### Determine if an option
 
         if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition
-            # shellcheck disable=SC2046
-            # shellcheck disable=SC2006
-            # shellcheck disable=SC2116
             eval `echo args$i`=`cygpath --path --ignore --mixed "$arg"`
         else
-            # shellcheck disable=SC2046
-            # shellcheck disable=SC2006
-            # shellcheck disable=SC2116
             eval `echo args$i`="\"$arg\""
         fi
-        # shellcheck disable=SC2006
-        # shellcheck disable=SC2003
         i=`expr $i + 1`
     done
-
-        # shellcheck disable=SC2154
     case $i in
         0) set -- ;;
         1) set -- "$args0" ;;
@@ -211,7 +178,6 @@ save () {
     for i do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/" ; done
     echo " "
 }
-# shellcheck disable=SC2006
 APP_ARGS=`save "$@"`
 
 # Collect all arguments for the java command, following the shell quoting and substitution rules
