@@ -6,7 +6,6 @@
 **/*.out
 
 # Ignore gradle output
-**/.gradle/
 **/build/**
 
 # Ignore mac files
