@@ -2,6 +2,16 @@
 *.class
 **/out/**
 
+# Ignore the output files
+**/*.out
+
+# Ignore gradle output
+**/.gradle/
+**/build/**
+
+# Ignore mac files
+**/.DS_Store
+
 # Log file
 *.log
 
