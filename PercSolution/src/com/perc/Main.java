@@ -4,7 +4,6 @@ import com.perc.classes.CacheServer;
 import com.perc.classes.DataCenter;
 import com.perc.classes.EndPoint;
 import com.perc.classes.Video;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.*;
@@ -102,11 +101,9 @@ public class Main {
         }
       }
     }
-
-
   }
 
-  private static HashMap<String, Integer> sortMapDesc(@NotNull HashMap<String, Integer> videoRequestsUnSorted) {
+  private static HashMap<String, Integer> sortMapDesc(HashMap<String, Integer> videoRequestsUnSorted) {
     HashMap<String, Integer> videoRequestsSorted = new HashMap<>();
     videoRequestsUnSorted.entrySet()
             .stream()
@@ -116,11 +113,11 @@ public class Main {
   }
 
   private static void minimizeLatencies(
-          @NotNull HashMap<String, Integer> videoRequestsUnSorted,
-          @NotNull ArrayList<EndPoint> endPoints,
-          @NotNull ArrayList<CacheServer>  cacheServers,
-          @NotNull ArrayList<Video> videos,
-          @NotNull DataCenter dataCenter
+          HashMap<String, Integer> videoRequestsUnSorted,
+          ArrayList<EndPoint> endPoints,
+          ArrayList<CacheServer>  cacheServers,
+          ArrayList<Video> videos,
+          DataCenter dataCenter
   ) {
     HashMap<String, Integer> videoRequestsSorted = sortMapDesc(videoRequestsUnSorted);
     for(String key: videoRequestsSorted.keySet()) {
